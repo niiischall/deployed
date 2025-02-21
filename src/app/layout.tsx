@@ -4,7 +4,7 @@ import { ThemeSwitcher } from './_components/theme-switcher';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: `deployed - nischal nikit`,
+  title: `deployed by nischal`,
   description: `A collection of tech write ups by nischal nikit`,
   twitter: {
     images: ['/assets/into/cover.png'],

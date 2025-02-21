@@ -49,7 +49,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     return notFound();
   }
 
-  const title = `${post.title} | deployed - nischal nikit`;
+  const title = `${post.title} | deployed by nischal`;
 
   return {
     title,
