@@ -8,7 +8,7 @@ import createApolloClient from '@/lib/apollo-client';
 
 export default async () => {
   const client = createApolloClient();
-  const allPosts = await fetchAllPosts(client, 'niiischalll.hashnode.dev');
+  const allPosts = await fetchAllPosts(client, process.env.HASHNODE_HOSTNAME);
 
   const heroPost = allPosts[0];
   const morePosts = allPosts.length > 1 ? allPosts?.slice(1) : [];

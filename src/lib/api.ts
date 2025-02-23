@@ -1,7 +1,7 @@
 import { GET_ALL_POSTS, GET_POST_BY_SLUG } from './queries';
 import createApolloClient from './apollo-client';
 
-export const fetchAllPosts = async (client: any, hostname: string) => {
+export const fetchAllPosts = async (client: any, hostname?: string) => {
   let allPosts: any[] = [];
 
   const { data } = await client.query({
@@ -17,18 +17,18 @@ export const fetchAllPosts = async (client: any, hostname: string) => {
 
 export const getAllPosts = async () => {
   const client = createApolloClient();
-  const allPosts = await fetchAllPosts(client, 'niiischalll.hashnode.dev');
+  const allPosts = await fetchAllPosts(client, process.env.HASHNODE_HOSTNAME);
   return allPosts;
 };
 
 export const fetchPostBySlug = async ({
   client,
-  hostname,
   slug,
+  hostname,
 }: {
   client: any;
-  hostname: string;
   slug: string;
+  hostname?: string;
 }) => {
   const response = await client.query({
     query: GET_POST_BY_SLUG,
