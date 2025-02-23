@@ -11,8 +11,8 @@ export const GET_ALL_POSTS = gql`
           node {
             id
             title
+            subtitle
             slug
-            brief
             publishedAt
             coverImage {
               url

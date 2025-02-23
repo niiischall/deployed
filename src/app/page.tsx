@@ -23,7 +23,7 @@ export default async () => {
           slug={heroPost?.slug}
           coverImage={heroPost?.coverImage?.url}
           date={heroPost?.publishedAt}
-          excerpt={heroPost?.brief}
+          excerpt={heroPost?.subtitle}
         />
         {isMorePostsPresent ? (
           <>
