@@ -7,7 +7,7 @@ import { SectionSeparator } from '@/app/_components/section-separator';
 import { fetchAllPosts } from '@/lib/api';
 import createApolloClient from '@/lib/apollo-client';
 
-export const Index = async () => {
+export const Root = async () => {
   const client = createApolloClient();
   const allPosts = await fetchAllPosts(client, 'niiischalll.hashnode.dev');
 
@@ -37,4 +37,4 @@ export const Index = async () => {
   );
 };
 
-export default Index;
+export default Root;
