@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ThemeSwitcher } from './_components/theme-switcher';
 
 import './globals.css';
+import './highlight.css';
 
 export const metadata: Metadata = {
   title: `deployed by nischal`,

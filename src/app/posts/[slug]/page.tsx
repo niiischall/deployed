@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { fetchPostBySlug, getAllPosts } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
@@ -6,7 +7,6 @@ import Header from '@/app/_components/header';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import createApolloClient from '@/lib/apollo-client';
-import { Metadata } from 'next';
 
 export default async function Post(props: Params) {
   const params = await props.params;
