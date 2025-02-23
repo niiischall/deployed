@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import styles from './switch.module.css';
-
 const Header = () => {
   return (
     <div className='flex mb-20 mt-8 gap-4'>

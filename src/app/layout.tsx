@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ThemeSwitcher } from './_components/theme-switcher';
-
+import { PostHogProvider } from './providers';
 import './globals.css';
 import './highlight.css';
 
@@ -101,8 +101,10 @@ export default function RootLayout({
         <meta name='theme-color' content='#ffffff'></meta>
       </head>
       <body className={'bg-light dark:bg-slate-900 dark:text-slate-400'}>
-        <ThemeSwitcher />
-        <div className='min-h-screen'>{children}</div>
+        <PostHogProvider>
+          <ThemeSwitcher />
+          <div className='min-h-screen'>{children}</div>
+        </PostHogProvider>
       </body>
     </html>
   );

@@ -1,9 +1,19 @@
+'use client';
 import Image from 'next/image';
+import posthog from 'posthog-js';
 
 export function Intro() {
+  const handleClick = () => {
+    posthog.capture('Portfolio Link Clicked', {});
+  };
+
   return (
     <section className='flex items-center gap-4 mt-16 mb-16 md:mb-12'>
-      <a href={`https://www.nischalnikit.xyz`} target='blank'>
+      <a
+        href={`https://www.nischalnikit.xyz`}
+        target='blank'
+        onClick={handleClick}
+      >
         <Image
           src={'/assets/intro/title.png'}
           alt={`Cover Image`}

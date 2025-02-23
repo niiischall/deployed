@@ -14,7 +14,7 @@ export default async function Post(props: Params) {
 
   const post = await fetchPostBySlug({
     client,
-    hostname: process.env.HASHNODE_HOSTNAME,
+    hostname: process.env.NEXT_HASHNODE_HOSTNAME,
     slug: params.slug,
   });
 
@@ -52,7 +52,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
   const client = createApolloClient();
   const post = await fetchPostBySlug({
     client,
-    hostname: process.env.HASHNODE_HOSTNAME,
+    hostname: process.env.NEXT_HASHNODE_HOSTNAME,
     slug: params.slug,
   });
 

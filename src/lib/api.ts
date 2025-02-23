@@ -17,7 +17,10 @@ export const fetchAllPosts = async (client: any, hostname?: string) => {
 
 export const getAllPosts = async () => {
   const client = createApolloClient();
-  const allPosts = await fetchAllPosts(client, process.env.HASHNODE_HOSTNAME);
+  const allPosts = await fetchAllPosts(
+    client,
+    process.env.NEXT_HASHNODE_HOSTNAME
+  );
   return allPosts;
 };
 
