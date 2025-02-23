@@ -1,21 +1,28 @@
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getAllPosts, getPostBySlug } from '@/lib/api';
+import { fetchPostBySlug, getAllPosts } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
 import Container from '@/app/_components/container';
 import Header from '@/app/_components/header';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
+import createApolloClient from '@/lib/apollo-client';
+import { Metadata } from 'next';
 
 export default async function Post(props: Params) {
   const params = await props.params;
-  const post = getPostBySlug(params.slug);
+  const client = createApolloClient();
+
+  const post = await fetchPostBySlug({
+    client,
+    hostname: 'niiischalll.hashnode.dev',
+    slug: params.slug,
+  });
 
   if (!post) {
     return notFound();
   }
 
-  const content = await markdownToHtml(post.content || '');
+  const content = await markdownToHtml(post?.content?.markdown || '');
 
   return (
     <main>
@@ -23,10 +30,9 @@ export default async function Post(props: Params) {
         <Header />
         <article className='mb-32'>
           <PostHeader
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            author={post.author}
+            title={post?.title}
+            coverImage={post?.coverImage?.url}
+            date={post?.publishedAt}
           />
           <PostBody content={content} />
         </article>
@@ -43,7 +49,12 @@ type Params = {
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
-  const post = getPostBySlug(params.slug);
+  const client = createApolloClient();
+  const post = await fetchPostBySlug({
+    client,
+    hostname: 'niiischalll.hashnode.dev',
+    slug: params.slug,
+  });
 
   if (!post) {
     return notFound();
@@ -51,17 +62,18 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 
   const title = `${post.title} | deployed by nischal`;
 
+  console.log('post: ', post);
   return {
     title,
     openGraph: {
       title,
-      images: [post.ogImage.url],
+      images: [post.coverImage.url],
     },
   };
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
 
   return posts.map((post) => ({
     slug: post.slug,

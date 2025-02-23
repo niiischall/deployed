@@ -1,28 +1,41 @@
-import { Post } from "@/interfaces/post";
-import fs from "fs";
-import matter from "gray-matter";
-import { join } from "path";
+import { GET_ALL_POSTS, GET_POST_BY_SLUG } from './queries';
+import createApolloClient from './apollo-client';
 
-const postsDirectory = join(process.cwd(), "_posts");
+export const fetchAllPosts = async (client: any, hostname: string) => {
+  let allPosts: any[] = [];
 
-export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory);
-}
+  const { data } = await client.query({
+    query: GET_ALL_POSTS,
+    variables: { hostname },
+  });
 
-export function getPostBySlug(slug: string) {
-  const realSlug = slug.replace(/\.md$/, "");
-  const fullPath = join(postsDirectory, `${realSlug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(fileContents);
+  const posts = data.publication.posts.edges.map((edge: any) => edge.node);
+  allPosts = [...allPosts, ...posts];
 
-  return { ...data, slug: realSlug, content } as Post;
-}
+  return allPosts;
+};
 
-export function getAllPosts(): Post[] {
-  const slugs = getPostSlugs();
-  const posts = slugs
-    .map((slug) => getPostBySlug(slug))
-    // sort posts by date in descending order
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-  return posts;
-}
+export const getAllPosts = async () => {
+  const client = createApolloClient();
+  const allPosts = await fetchAllPosts(client, 'niiischalll.hashnode.dev');
+  return allPosts;
+};
+
+export const fetchPostBySlug = async ({
+  client,
+  hostname,
+  slug,
+}: {
+  client: any;
+  hostname: string;
+  slug: string;
+}) => {
+  const response = await client.query({
+    query: GET_POST_BY_SLUG,
+    variables: { hostname, slug },
+  });
+  const { data } = response;
+  const { publication } = data ?? {};
+  const { post } = publication ?? {};
+  return post;
+};

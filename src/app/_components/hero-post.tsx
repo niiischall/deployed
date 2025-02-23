@@ -8,18 +8,10 @@ type Props = {
   coverImage: string;
   date: string;
   excerpt: string;
-  author: Author;
   slug: string;
 };
 
-export function HeroPost({
-  title,
-  coverImage,
-  date,
-  excerpt,
-  author,
-  slug,
-}: Props) {
+export function HeroPost({ title, coverImage, date, excerpt, slug }: Props) {
   return (
     <section>
       <div className='mb-8 md:mb-16'>
