@@ -15,15 +15,17 @@ export default async function markdownToHtml(markdown: string) {
   );
 
   // Convert Hashnode-style images with alignment
+  // Convert Hashnode-style images with alt text and alignment
   const imageRegex =
-    /!\[\]\((https?:\/\/.*?\.(?:png|jpg|jpeg|gif|webp|svg))\s+align="(left|right|center)"\)/g;
-  markdown = markdown.replace(imageRegex, (_, imageUrl, align) => {
+    /!\[([^\]]*)\]\((https?:\/\/.*?\.(?:png|jpg|jpeg|gif|webp|svg))\s+align="(left|right|center)"\)/g;
+
+  markdown = markdown.replace(imageRegex, (_, altText, imageUrl, align) => {
     let style = '';
     if (align === 'left') style = 'style="margin-right: 10px;"';
     if (align === 'right') style = 'style="margin-left: 10px;"';
     if (align === 'center') style = 'style="display: block; margin: 0 auto;"';
 
-    return `<img src="${imageUrl}" ${style} alt="Image" />`;
+    return `<img src="${imageUrl}" alt="${altText}" ${style} />`;
   });
 
   const result = await remark()
