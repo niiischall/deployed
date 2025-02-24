@@ -7,19 +7,6 @@ import './highlight.css';
 export const metadata: Metadata = {
   title: `deployed by nischal`,
   description: `A collection of writeups by nischal nikit`,
-  twitter: {
-    images: ['/assets/intro/cover.png'],
-  },
-  openGraph: {
-    images: [
-      {
-        url: '/assets/intro/cover.png',
-        width: 1200,
-        height: 630,
-        alt: 'deployed by nischal',
-      },
-    ],
-  },
 };
 
 export default function RootLayout({
@@ -106,6 +93,15 @@ export default function RootLayout({
           content='/favicon/ms-icon-144x144.png'
         ></meta>
         <meta name='theme-color' content='#ffffff'></meta>
+        <meta property='og:image' content='<generated>' />
+        <meta property='og:image:alt' content='deployed by nischal' />
+        <meta property='og:image:type' content='image/png' />
+        <meta property='og:image:width' content='1200' />
+        <meta property='og:image:height' content='630' />
+        <meta name='twitter:image' content='<generated>' />
+        <meta name='twitter:image:type' content='<generated>' />
+        <meta name='twitter:image:width' content='<generated>' />
+        <meta name='twitter:image:height' content='<generated>' />
       </head>
       <body className={'bg-light dark:bg-slate-900 dark:text-slate-400'}>
         <PostHogProvider>

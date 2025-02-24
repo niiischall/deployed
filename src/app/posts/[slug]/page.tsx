@@ -71,20 +71,6 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 
   return {
     title,
-    openGraph: {
-      title,
-      images: [
-        {
-          url: post.coverImage.url,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
-    },
-    twitter: {
-      images: [post.coverImage.url],
-    },
   };
 }
 
