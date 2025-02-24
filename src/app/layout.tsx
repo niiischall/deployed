@@ -11,7 +11,14 @@ export const metadata: Metadata = {
     images: ['/assets/intro/cover.png'],
   },
   openGraph: {
-    images: ['/assets/intro/cover.png'],
+    images: [
+      {
+        url: '/assets/intro/cover.png',
+        width: 1200,
+        height: 630,
+        alt: 'deployed by nischal',
+      },
+    ],
   },
 };
 
