@@ -7,6 +7,7 @@ import Header from '@/app/_components/header';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import createApolloClient from '@/lib/apollo-client';
+import { calculateReadingTime } from '@/lib/utils';
 
 export default async function Post(props: Params) {
   const params = await props.params;
@@ -23,6 +24,7 @@ export default async function Post(props: Params) {
   }
 
   const content = await markdownToHtml(post?.content?.markdown || '');
+  const readingTime = calculateReadingTime(content);
 
   return (
     <main>
@@ -34,6 +36,11 @@ export default async function Post(props: Params) {
             coverImage={post?.coverImage?.url}
             date={post?.publishedAt}
           />
+          <div className='max-w-2xl mx-auto'>
+            <div className='mb-6 text-lg'>
+              <p>{readingTime}</p>
+            </div>
+          </div>
           <PostBody content={content} />
         </article>
       </Container>
@@ -62,11 +69,13 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 
   const title = `${post.title} | deployed by nischal`;
 
-  console.log('post: ', post);
   return {
     title,
     openGraph: {
       title,
+      images: [post.coverImage.url],
+    },
+    twitter: {
       images: [post.coverImage.url],
     },
   };

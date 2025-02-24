@@ -6,12 +6,12 @@ import './highlight.css';
 
 export const metadata: Metadata = {
   title: `deployed by nischal`,
-  description: `A collection of tech write ups by nischal nikit`,
+  description: `A collection of writeups by nischal nikit`,
   twitter: {
-    images: ['/assets/into/cover.png'],
+    images: ['/assets/intro/cover.png'],
   },
   openGraph: {
-    images: ['/assets/into/cover.png'],
+    images: ['/assets/intro/cover.png'],
   },
 };
 
