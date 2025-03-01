@@ -6,7 +6,6 @@ type Props = {
 };
 
 export function MoreStories({ posts }: Props) {
-  console.log('posts: ', posts);
   return (
     <section>
       <h2 className='mb-24 text-5xl font-bold tracking-tighter leading-tight'>
