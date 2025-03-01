@@ -6,6 +6,7 @@ type Props = {
 };
 
 export function MoreStories({ posts }: Props) {
+  console.log('posts: ', posts);
   return (
     <section>
       <h2 className='mb-24 text-5xl font-bold tracking-tighter leading-tight'>
@@ -16,8 +17,8 @@ export function MoreStories({ posts }: Props) {
           <PostPreview
             key={post.slug}
             title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
+            coverImage={post.coverImage.url}
+            date={post.publishedAt}
             author={post.author}
             slug={post.slug}
             excerpt={post.excerpt}
