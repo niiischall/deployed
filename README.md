@@ -12,7 +12,7 @@ Personal blog at [blog.nischalnikit.xyz](https://blog.nischalnikit.xyz) — buil
 
 ## Local development
 
-1. Clone the repo and install dependencies:
+1. Clone the repo and install the dependencies:
    ```bash
    pnpm install
    ```
@@ -62,6 +62,7 @@ pnpm sanity:prepare-import ./path/to/posts.json ./scripts/sanity-import.ndjson
 ```
 
 Input JSON can be either:
+
 - An array of posts, or
 - An object containing a `posts` array
 
