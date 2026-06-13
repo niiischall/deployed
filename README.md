@@ -1,12 +1,12 @@
 # deployed
 
-Personal blog at [blog.nischalnikit.xyz](https://blog.nischalnikit.xyz) — built with Next.js 15, fetching posts from Hashnode via GraphQL.
+Personal blog at [blog.nischalnikit.xyz](https://blog.nischalnikit.xyz) — built with Next.js 15, using Sanity as the CMS.
 
 ## Stack
 
 - Next.js 15 (App Router, Turbopack)
 - TypeScript + Tailwind CSS
-- Hashnode GraphQL API via Apollo Client
+- Sanity Content Lake + Studio
 - remark / rehype for Markdown → HTML
 - PostHog for analytics
 
@@ -18,22 +18,80 @@ Personal blog at [blog.nischalnikit.xyz](https://blog.nischalnikit.xyz) — buil
    ```
 2. Create a `.env.local` file at the project root:
    ```
-   NEXT_HASHNODE_HOSTNAME=<your-hashnode-publication-hostname>
+   NEXT_PUBLIC_SANITY_PROJECT_ID=<your-sanity-project-id>
+   NEXT_PUBLIC_SANITY_DATASET=production
+   NEXT_PUBLIC_SANITY_API_VERSION=2024-11-01
+   # Optional: only needed when dataset is private
+   SANITY_API_READ_TOKEN=<token-with-read-access>
    ```
 3. Start the dev server:
    ```bash
    pnpm dev
    ```
+4. (Optional) Run Sanity Studio locally:
+   ```bash
+   pnpm sanity:studio
+   ```
+   Studio is also embedded in this app at [http://localhost:3000/studio](http://localhost:3000/studio).
+
+## Sanity setup
+
+1. Create a Sanity project:
+   ```bash
+   pnpm dlx sanity@latest init
+   ```
+2. Use the same project id + dataset values in `.env.local`.
+3. Open Studio (`/studio`) and create:
+   - At least one `author` document (optional but recommended)
+   - Any `tag` documents (optional)
+   - A `post` document with:
+     - `title`
+     - `slug`
+     - `excerpt`
+     - `publishedAt`
+     - `markdown` (required; this is rendered by the frontend)
+     - optional `coverImage` (or `coverImageUrl` fallback during migration)
+4. Publish the post from Studio.
+
+## Content migration helper
+
+Use the included script to convert a JSON export into Sanity import NDJSON:
+
+```bash
+pnpm sanity:prepare-import ./path/to/posts.json ./scripts/sanity-import.ndjson
+```
+
+Input JSON can be either:
+- An array of posts, or
+- An object containing a `posts` array
+
+Each post may contain fields like:
+`title`, `slug`, `subtitle`/`excerpt`, `publishedAt`, `coverImage.url`, `content.markdown`, optional `author.name`, optional `tags`.
+
+Then import into Sanity:
+
+```bash
+sanity dataset import ./scripts/sanity-import.ndjson production
+```
 
 ## Project structure
 
 ```
 src/app/              — App Router pages and root layout
 src/app/_components/  — UI components (header, post body, theme switcher, …)
-src/lib/              — API helpers, GraphQL queries, markdown utilities
+src/lib/              — API helpers, Sanity client/queries, markdown utilities
+src/sanity/           — Sanity schema definitions
+scripts/              — migration/import helper scripts
 public/               — Static assets and favicons
 ```
 
-## Deploy
+## Deploy (Vercel)
 
-Deployed on Vercel. Pushing to `main` triggers a production build.
+Set these environment variables in Vercel:
+
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`
+- `NEXT_PUBLIC_SANITY_DATASET`
+- `NEXT_PUBLIC_SANITY_API_VERSION`
+- `SANITY_API_READ_TOKEN` (only if dataset is private)
+
+Then redeploy. Pushing to `main` triggers a production build.

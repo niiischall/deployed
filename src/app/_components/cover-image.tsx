@@ -4,11 +4,19 @@ import Image from 'next/image';
 
 type Props = {
   title: string;
-  src: string;
+  src?: string;
   slug?: string;
 };
 
 const CoverImage = ({ title, src, slug }: Props) => {
+  if (!src) {
+    return (
+      <div className='sm:mx-0'>
+        <div className='shadow-sm w-full aspect-[1300/630] bg-neutral-200 dark:bg-slate-800 rounded-sm' />
+      </div>
+    );
+  }
+
   const image = (
     <Image
       src={src}

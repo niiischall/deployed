@@ -6,7 +6,7 @@ import posthog from 'posthog-js';
 
 type Props = {
   title: string;
-  coverImage: string;
+  coverImage?: string;
   date: string;
   excerpt: string;
   slug: string;

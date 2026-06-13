@@ -1,6 +1,5 @@
 'use client';
 
-import { type Author } from '@/interfaces/author';
 import Link from 'next/link';
 import posthog from 'posthog-js';
 
@@ -9,10 +8,9 @@ import DateFormatter from './date-formatter';
 
 type Props = {
   title: string;
-  coverImage: string;
+  coverImage?: string;
   date: string;
   excerpt: string;
-  author: Author;
   slug: string;
 };
 
@@ -21,7 +19,6 @@ export function PostPreview({
   coverImage,
   date,
   excerpt,
-  author,
   slug,
 }: Props) {
   const handleClick = () => {

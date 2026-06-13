@@ -1,13 +1,16 @@
-module.exports = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   images: {
+    domains: ['cdn.sanity.io'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.hashnode.com',
-        port: '',
-        pathname: '**',
-        search: '',
+        hostname: 'cdn.sanity.io',
+        pathname: '/images/**',
       },
     ],
   },
 };
+
+export default nextConfig;

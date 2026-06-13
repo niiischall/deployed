@@ -1,29 +1,22 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { fetchPostBySlug, getAllPosts } from '@/lib/api';
+import { fetchPostBySlug, getAllPostSlugs } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
 import Container from '@/app/_components/container';
 import Header from '@/app/_components/header';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
-import createApolloClient from '@/lib/apollo-client';
 import { calculateReadingTime } from '@/lib/utils';
 
 export default async function Post(props: Params) {
   const params = await props.params;
-  const client = createApolloClient();
-
-  const post = await fetchPostBySlug({
-    client,
-    hostname: process.env.NEXT_HASHNODE_HOSTNAME,
-    slug: params.slug,
-  });
+  const post = await fetchPostBySlug(params.slug);
 
   if (!post) {
     return notFound();
   }
 
-  const content = await markdownToHtml(post?.content?.markdown || '');
+  const content = await markdownToHtml(post.content.markdown || '');
   const readingTime = calculateReadingTime(content);
 
   return (
@@ -32,9 +25,9 @@ export default async function Post(props: Params) {
         <Header />
         <article className='mb-32'>
           <PostHeader
-            title={post?.title}
-            coverImage={post?.coverImage?.url}
-            date={post?.publishedAt}
+            title={post.title}
+            coverImage={post.coverImage.url}
+            date={post.publishedAt}
           />
           <div className='max-w-2xl mx-auto'>
             <div className='mb-6 text-lg'>
@@ -56,12 +49,7 @@ type Params = {
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
-  const client = createApolloClient();
-  const post = await fetchPostBySlug({
-    client,
-    hostname: process.env.NEXT_HASHNODE_HOSTNAME,
-    slug: params.slug,
-  });
+  const post = await fetchPostBySlug(params.slug);
 
   if (!post) {
     return notFound();
@@ -71,13 +59,11 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 
   return {
     title,
+    description: post.excerpt || undefined,
   };
 }
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  const slugs = await getAllPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }

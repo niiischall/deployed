@@ -3,15 +3,10 @@ import { HeroPost } from '@/app/_components/hero-post';
 import { Intro } from '@/app/_components/intro';
 import { MoreStories } from '@/app/_components/more-stories';
 import { SectionSeparator } from '@/app/_components/section-separator';
-import { fetchAllPosts } from '@/lib/api';
-import createApolloClient from '@/lib/apollo-client';
+import { getAllPosts } from '@/lib/api';
 
 export default async () => {
-  const client = createApolloClient();
-  const allPosts = await fetchAllPosts(
-    client,
-    process.env.NEXT_HASHNODE_HOSTNAME
-  );
+  const allPosts = await getAllPosts();
 
   const heroPost = allPosts[0];
   const morePosts = allPosts.length > 1 ? allPosts?.slice(1) : [];
@@ -21,13 +16,17 @@ export default async () => {
     <main>
       <Container>
         <Intro />
-        <HeroPost
-          title={heroPost?.title}
-          slug={heroPost?.slug}
-          coverImage={heroPost?.coverImage?.url}
-          date={heroPost?.publishedAt}
-          excerpt={heroPost?.subtitle}
-        />
+        {heroPost ? (
+          <HeroPost
+            title={heroPost.title}
+            slug={heroPost.slug}
+            coverImage={heroPost.coverImage.url}
+            date={heroPost.publishedAt}
+            excerpt={heroPost.subtitle}
+          />
+        ) : (
+          <p className='mb-16 text-lg'>No posts published yet.</p>
+        )}
         {isMorePostsPresent ? (
           <>
             <SectionSeparator />
