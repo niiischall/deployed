@@ -8,6 +8,8 @@ import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import { calculateReadingTime } from '@/lib/utils';
 
+export const revalidate = 60;
+
 export default async function Post(props: Params) {
   const params = await props.params;
   const post = await fetchPostBySlug(params.slug);

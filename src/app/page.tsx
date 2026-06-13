@@ -5,6 +5,8 @@ import { MoreStories } from '@/app/_components/more-stories';
 import { SectionSeparator } from '@/app/_components/section-separator';
 import { getAllPosts } from '@/lib/api';
 
+export const revalidate = 60;
+
 export default async () => {
   const allPosts = await getAllPosts();
 
