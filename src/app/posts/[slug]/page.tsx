@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { REVALIDATE_SECONDS, fetchPostBySlug, getAllPostSlugs } from '@/lib/api';
+import { fetchPostBySlug, getAllPostSlugs, getAllPosts } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
 import Container from '@/app/_components/container';
 import Header from '@/app/_components/header';
@@ -8,7 +10,7 @@ import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import { calculateReadingTime } from '@/lib/utils';
 
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 60;
 
 type TocItem = {
   id: string;
@@ -69,6 +71,10 @@ export default async function Post(props: Params) {
   const content = await markdownToHtml(post.content.markdown || '');
   const { contentWithHeadingIds, tocItems } = addHeadingIdsAndExtractToc(content);
   const readingTime = calculateReadingTime(content);
+  const allPosts = await getAllPosts();
+  const currentPostIndex = allPosts.findIndex((entry) => entry.slug === post.slug);
+  const previousPost = currentPostIndex >= 0 ? allPosts[currentPostIndex + 1] : null;
+  const nextPost = currentPostIndex > 0 ? allPosts[currentPostIndex - 1] : null;
   const postUrl = `https://blog.nischalnikit.xyz/posts/${post.slug}`;
   const description =
     post.excerpt || post.subtitle || `Read ${post.title} on deployed by nischal.`;
@@ -143,6 +149,65 @@ export default async function Post(props: Params) {
           <div className='mt-10'>
             <PostBody content={contentWithHeadingIds} />
           </div>
+          {previousPost || nextPost ? (
+            <section className='mx-auto mt-12 max-w-2xl border-t border-slate-300/70 pt-8 dark:border-slate-700/80'>
+              <h2 className='mb-4 text-3xl leading-snug'>Keep reading</h2>
+              <nav aria-label='Post navigation' className='grid gap-4 md:grid-cols-2'>
+                <div>
+                  {previousPost ? (
+                    <Link
+                      href={`/posts/${previousPost.slug}`}
+                      className='group block rounded-md border border-transparent p-3 transition-colors hover:border-slate-300 hover:bg-white/70 dark:hover:border-slate-700 dark:hover:bg-slate-800/40'
+                    >
+                      {previousPost.coverImage.url ? (
+                        <div className='mb-3 overflow-hidden rounded-md'>
+                          <Image
+                            src={previousPost.coverImage.url}
+                            alt={`Cover image for ${previousPost.title}`}
+                            width={640}
+                            height={360}
+                            className='h-auto w-full transition-transform duration-300 group-hover:scale-[1.02]'
+                          />
+                        </div>
+                      ) : null}
+                      <p className='text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400'>
+                        Previous Post
+                      </p>
+                      <p className='mt-1 text-lg text-slate-800 group-hover:text-sky-700 dark:text-slate-200 dark:group-hover:text-sky-400'>
+                        ← {previousPost.title}
+                      </p>
+                    </Link>
+                  ) : null}
+                </div>
+                <div className='md:text-right'>
+                  {nextPost ? (
+                    <Link
+                      href={`/posts/${nextPost.slug}`}
+                      className='group block rounded-md border border-transparent p-3 transition-colors hover:border-slate-300 hover:bg-white/70 dark:hover:border-slate-700 dark:hover:bg-slate-800/40'
+                    >
+                      {nextPost.coverImage.url ? (
+                        <div className='mb-3 overflow-hidden rounded-md'>
+                          <Image
+                            src={nextPost.coverImage.url}
+                            alt={`Cover image for ${nextPost.title}`}
+                            width={640}
+                            height={360}
+                            className='h-auto w-full transition-transform duration-300 group-hover:scale-[1.02]'
+                          />
+                        </div>
+                      ) : null}
+                      <p className='text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400'>
+                        Next Post
+                      </p>
+                      <p className='mt-1 text-lg text-slate-800 group-hover:text-sky-700 dark:text-slate-200 dark:group-hover:text-sky-400'>
+                        {nextPost.title} →
+                      </p>
+                    </Link>
+                  ) : null}
+                </div>
+              </nav>
+            </section>
+          ) : null}
         </article>
       </Container>
     </main>

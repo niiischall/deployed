@@ -2,7 +2,7 @@ import { REVALIDATE_SECONDS, getAllPosts } from '@/lib/api';
 
 const siteUrl = 'https://blog.nischalnikit.xyz';
 
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 60;
 
 const escapeXml = (value: string) =>
   value
