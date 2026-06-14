@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Ovo } from 'next/font/google';
+import Footer from './_components/footer';
 import { ThemeScript } from './_components/theme-switcher';
 import { PostHogProvider } from './providers';
 import './globals.css';
@@ -115,7 +116,10 @@ export default function RootLayout({
       <body className={'bg-light dark:bg-slate-900 dark:text-slate-400'}>
         <PostHogProvider>
           <ThemeScript />
-          <div className='min-h-screen'>{children}</div>
+          <div className='flex min-h-screen flex-col'>
+            <main className='flex-1'>{children}</main>
+            <Footer />
+          </div>
         </PostHogProvider>
       </body>
     </html>

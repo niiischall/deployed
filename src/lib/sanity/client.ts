@@ -11,7 +11,6 @@ export const sanityClient = createClient({
   projectId: projectId || 'missing-project-id',
   dataset: dataset || 'missing-dataset',
   apiVersion,
-  // Disable CDN to avoid stale content when ISR revalidation windows expire.
   useCdn: false,
   token,
   perspective: 'published',
