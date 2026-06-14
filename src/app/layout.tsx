@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Ovo } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Footer from './_components/footer';
 import { ThemeScript } from './_components/theme-switcher';
 import { PostHogProvider } from './providers';
@@ -124,6 +125,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </PostHogProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
