@@ -10,6 +10,7 @@ import Header from '@/app/_components/header';
 import DateFormatter from '@/app/_components/date-formatter';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
+import { ReadingProgress } from '@/app/_components/reading-progress';
 import { calculateReadingTime } from '@/lib/utils';
 
 export const revalidate = 60;
@@ -107,6 +108,7 @@ export default async function Post(props: Params) {
 
   return (
     <main>
+      <ReadingProgress contentSelector='#post-content' />
       <Container>
         <script
           type='application/ld+json'
@@ -122,8 +124,8 @@ export default async function Post(props: Params) {
           />
           <div className='max-w-2xl mx-auto'>
             <div className='mb-3 text-lg'>
-              <div className='inline-flex items-center gap-4'>
-                <p>
+              <div className='flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4'>
+                <p className='inline-flex items-center gap-2'>
                   <DateFormatter dateString={post.publishedAt} />
                 </p>
                 <p className='inline-flex items-center gap-2'>
