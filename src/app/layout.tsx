@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
-import { ThemeSwitcher } from './_components/theme-switcher';
+import { Ovo } from 'next/font/google';
+import { ThemeScript } from './_components/theme-switcher';
 import { PostHogProvider } from './providers';
 import './globals.css';
 import './highlight.css';
+
+const ovo = Ovo({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-ovo',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://blog.nischalnikit.xyz'),
@@ -16,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' className={ovo.variable}>
       <head>
         <link
           rel='apple-touch-icon'
@@ -106,7 +114,7 @@ export default function RootLayout({
       </head>
       <body className={'bg-light dark:bg-slate-900 dark:text-slate-400'}>
         <PostHogProvider>
-          <ThemeSwitcher />
+          <ThemeScript />
           <div className='min-h-screen'>{children}</div>
         </PostHogProvider>
       </body>

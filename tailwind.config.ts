@@ -24,7 +24,7 @@ const config: Config = {
         tighter: '-.04em',
       },
       fontFamily: {
-        ovo: ['Ovo'],
+        ovo: ['var(--font-ovo)', 'serif'],
       },
       fontSize: {
         '5xl': '2.5rem',

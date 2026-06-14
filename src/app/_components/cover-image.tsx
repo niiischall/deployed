@@ -11,7 +11,7 @@ type Props = {
 const CoverImage = ({ title, src, slug }: Props) => {
   if (!src) {
     return (
-      <div className='sm:mx-0'>
+      <div>
         <div className='shadow-sm w-full aspect-[1300/630] bg-neutral-200 dark:bg-slate-800 rounded-sm' />
       </div>
     );
@@ -29,7 +29,7 @@ const CoverImage = ({ title, src, slug }: Props) => {
     />
   );
   return (
-    <div className='sm:mx-0'>
+    <div>
       {slug ? (
         <Link href={`/posts/${slug}`} aria-label={title}>
           {image}

@@ -10,32 +10,23 @@ declare global {
 type ColorSchemePreference = 'system' | 'dark' | 'light';
 
 const STORAGE_KEY = 'nextjs-blog-starter-theme';
-const modes: ColorSchemePreference[] = ['system', 'dark', 'light'];
 
-/** to reuse updateDOM function defined inside injected script */
-
-/** function to be injected in script tag for avoiding FOUC (Flash of Unstyled Content) */
 export const NoFOUCScript = (storageKey: string) => {
-  /* can not use outside constants or function as this script will be injected in a different context */
   const [SYSTEM, DARK, LIGHT] = ['system', 'dark', 'light'];
 
-  /** Modify transition globally to avoid patched transitions */
   const modifyTransition = () => {
     const css = document.createElement('style');
     css.textContent = '*,*:after,*:before{transition:none !important;}';
     document.head.appendChild(css);
 
     return () => {
-      /* Force restyle */
       getComputedStyle(document.body);
-      /* Wait for next tick before removing */
       setTimeout(() => document.head.removeChild(css), 1);
     };
   };
 
   const media = matchMedia(`(prefers-color-scheme: ${DARK})`);
 
-  /** function to add remove dark class */
   window.updateDOM = () => {
     const restoreTransitions = modifyTransition();
     const mode = localStorage.getItem(storageKey) ?? SYSTEM;
@@ -53,21 +44,16 @@ export const NoFOUCScript = (storageKey: string) => {
 
 let updateDOM: () => void;
 
-/**
- * Switch button to quickly toggle user preference.
- */
 const Switch = () => {
   const [mode, setMode] = useState<ColorSchemePreference>(
     () =>
       ((typeof localStorage !== 'undefined' &&
         localStorage.getItem(STORAGE_KEY)) ??
-        'system') as ColorSchemePreference
+        'system') as ColorSchemePreference,
   );
 
   useEffect(() => {
-    // store global functions to local variables to avoid any interference
     updateDOM = window.updateDOM;
-    /** Sync the tabs */
     addEventListener('storage', (e: StorageEvent): void => {
       e.key === STORAGE_KEY && setMode(e.newValue as ColorSchemePreference);
     });
@@ -78,21 +64,41 @@ const Switch = () => {
     updateDOM();
   }, [mode]);
 
-  /** toggle mode */
+  const isDark = mode === 'dark';
+
   const handleModeSwitch = () => {
-    const index = modes.indexOf(mode);
-    setMode(modes[(index + 1) % modes.length]);
+    setMode(isDark ? 'light' : 'dark');
   };
+
   return (
-    <button
-      suppressHydrationWarning
-      className={styles.switch}
-      onClick={handleModeSwitch}
-    />
+    <div className={styles.container}>
+      <span
+        className={`${styles.label} ${!isDark ? styles.activeLabel : ''}`}
+        aria-hidden='true'
+      >
+        ☀
+      </span>
+      <button
+        suppressHydrationWarning
+        className={styles.switch}
+        onClick={handleModeSwitch}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-pressed={isDark}
+        type='button'
+      >
+        <span className={styles.thumb} aria-hidden='true' />
+      </button>
+      <span
+        className={`${styles.label} ${isDark ? styles.activeLabel : ''}`}
+        aria-hidden='true'
+      >
+        ☾
+      </span>
+    </div>
   );
 };
 
-const Script = memo(() => (
+export const ThemeScript = memo(() => (
   <script
     dangerouslySetInnerHTML={{
       __html: `(${NoFOUCScript.toString()})('${STORAGE_KEY}')`,
@@ -100,14 +106,6 @@ const Script = memo(() => (
   />
 ));
 
-/**
- * This component wich applies classes and transitions.
- */
 export const ThemeSwitcher = () => {
-  return (
-    <>
-      <Script />
-      <Switch />
-    </>
-  );
+  return <Switch />;
 };
