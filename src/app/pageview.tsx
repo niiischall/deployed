@@ -8,7 +8,6 @@ function PostHogPageView() {
   const searchParams = useSearchParams();
   const posthog = usePostHog();
 
-  // Track pageviews
   useEffect(() => {
     if (pathname && posthog) {
       let url = window.origin + pathname;
