@@ -58,10 +58,37 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
   }
 
   const title = `${post.title} | deployed by nischal`;
+  const description =
+    post.excerpt || post.subtitle || `Read ${post.title} on deployed by nischal.`;
+  const canonicalUrl = `https://blog.nischalnikit.xyz/posts/${post.slug}`;
+  const imageUrl = post.coverImage.url || 'https://blog.nischalnikit.xyz/opengraph-image.png';
 
   return {
     title,
-    description: post.excerpt || undefined,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'deployed by nischal',
+      publishedTime: post.publishedAt || undefined,
+      images: [
+        {
+          url: imageUrl,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
   };
 }
 
