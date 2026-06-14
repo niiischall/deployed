@@ -117,9 +117,35 @@ export default async function Post(props: Params) {
             date={post.publishedAt}
           />
           <div className='max-w-2xl mx-auto'>
-            <div className='mb-6 text-lg'>
-              <p>{readingTime}</p>
+            <div className='mb-3 text-lg'>
+              <p className='inline-flex items-center gap-2'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='1.8'
+                  className='h-5 w-5'
+                  aria-hidden='true'
+                >
+                  <circle cx='12' cy='12' r='8.5' />
+                  <path d='M12 7.5v5l3.5 2' />
+                </svg>
+                <span>{readingTime}</span>
+              </p>
             </div>
+            {post.tags?.length ? (
+              <div className='mb-6 flex flex-wrap gap-2'>
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className='rounded-full border border-neutral-300 px-3 py-1 text-sm text-neutral-700 dark:border-slate-500 dark:text-slate-200'
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </div>
           {tocItems.length > 0 ? (
             <div className='max-w-2xl mx-auto mb-8'>
@@ -170,7 +196,7 @@ export default async function Post(props: Params) {
                           />
                         </div>
                       ) : null}
-                      <p className='text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400'>
+                      <p className='text-xs uppercase tracking-wide text-slate-500 dark:text-slate-300'>
                         Previous Post
                       </p>
                       <p className='mt-1 text-lg text-slate-800 group-hover:text-sky-700 dark:text-slate-200 dark:group-hover:text-sky-400'>
@@ -196,7 +222,7 @@ export default async function Post(props: Params) {
                           />
                         </div>
                       ) : null}
-                      <p className='text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400'>
+                      <p className='text-xs uppercase tracking-wide text-slate-500 dark:text-slate-300'>
                         Next Post
                       </p>
                       <p className='mt-1 text-lg text-slate-800 group-hover:text-sky-700 dark:text-slate-200 dark:group-hover:text-sky-400'>

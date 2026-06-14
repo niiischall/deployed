@@ -25,7 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className={ovo.variable}>
+    <html
+      lang='en'
+      className={`${ovo.variable} scroll-smooth motion-reduce:scroll-auto`}
+    >
       <head>
         <link
           rel='apple-touch-icon'
@@ -113,7 +116,7 @@ export default function RootLayout({
         <meta name='twitter:image:width' content='<generated>' />
         <meta name='twitter:image:height' content='<generated>' />
       </head>
-      <body className={'bg-light dark:bg-slate-900 dark:text-slate-400'}>
+      <body className={'bg-light dark:bg-slate-900 dark:text-slate-200'}>
         <PostHogProvider>
           <ThemeScript />
           <div className='flex min-h-screen flex-col'>

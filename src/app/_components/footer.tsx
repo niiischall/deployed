@@ -5,7 +5,7 @@ const Footer = () => {
 
   return (
     <footer className='mt-16 border-t border-slate-300/70 py-6 dark:border-slate-700/80'>
-      <div className='container mx-auto flex flex-col gap-4 px-5 text-sm text-slate-700 dark:text-slate-300 md:max-w-5xl'>
+      <div className='container mx-auto flex flex-col gap-4 px-5 text-sm text-slate-700 dark:text-slate-200 md:max-w-5xl'>
         <p className='flex items-center gap-2'>
           <span aria-hidden='true'>©</span>
           <span>{year} deployed by nischal. All rights reserved.</span>
