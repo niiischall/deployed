@@ -20,10 +20,40 @@ export default async function Post(props: Params) {
 
   const content = await markdownToHtml(post.content.markdown || '');
   const readingTime = calculateReadingTime(content);
+  const postUrl = `https://blog.nischalnikit.xyz/posts/${post.slug}`;
+  const description =
+    post.excerpt || post.subtitle || `Read ${post.title} on deployed by nischal.`;
+  const imageUrl = post.coverImage.url || 'https://blog.nischalnikit.xyz/opengraph-image.png';
+  const blogPostingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    image: [imageUrl],
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': postUrl,
+    },
+    author: {
+      '@type': 'Person',
+      name: post.author.name || 'Nischal Nikit',
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'Nischal Nikit',
+    },
+    url: postUrl,
+  };
 
   return (
     <main>
       <Container>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+        />
         <Header />
         <article className='mb-32'>
           <PostHeader

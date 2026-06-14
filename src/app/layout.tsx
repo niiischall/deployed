@@ -5,6 +5,7 @@ import './globals.css';
 import './highlight.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://blog.nischalnikit.xyz'),
   title: `deployed by nischal`,
   description: `A collection of writeups by nischal nikit`,
 };
