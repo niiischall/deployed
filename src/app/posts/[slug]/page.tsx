@@ -11,6 +11,7 @@ import DateFormatter from '@/app/_components/date-formatter';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import { ReadingProgress } from '@/app/_components/reading-progress';
+import { PostShare } from '@/app/_components/post-share';
 import { calculateReadingTime } from '@/lib/utils';
 
 export const revalidate = 60;
@@ -203,6 +204,7 @@ export default async function Post(props: Params) {
           <div className='mt-10'>
             <PostBody content={contentWithHeadingIds} />
           </div>
+          <PostShare title={post.title} postUrl={postUrl} coverImage={post.coverImage.url} />
           {previousPost || nextPost ? (
             <section className='mx-auto mt-12 max-w-2xl border-t border-slate-300/70 pt-8 dark:border-slate-700/80'>
               <h2 className='mb-4 text-3xl leading-snug'>Keep reading</h2>
