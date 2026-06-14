@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { fetchPostBySlug, getAllPostSlugs } from '@/lib/api';
+import { REVALIDATE_SECONDS, fetchPostBySlug, getAllPostSlugs } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
 import Container from '@/app/_components/container';
 import Header from '@/app/_components/header';
@@ -8,7 +8,7 @@ import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import { calculateReadingTime } from '@/lib/utils';
 
-export const revalidate = 60;
+export const revalidate = REVALIDATE_SECONDS;
 
 type TocItem = {
   id: string;

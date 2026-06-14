@@ -3,9 +3,9 @@ import { HeroPost } from '@/app/_components/hero-post';
 import { Intro } from '@/app/_components/intro';
 import { MoreStories } from '@/app/_components/more-stories';
 import { SectionSeparator } from '@/app/_components/section-separator';
-import { getAllPosts } from '@/lib/api';
+import { getAllPosts, REVALIDATE_SECONDS } from '@/lib/api';
 
-export const revalidate = 60;
+export const revalidate = REVALIDATE_SECONDS;
 
 export default async () => {
   const allPosts = await getAllPosts();

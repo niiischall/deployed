@@ -4,6 +4,8 @@ import { isSanityConfigured, sanityClient } from './sanity/client';
 import { SanityPost } from './sanity/types';
 import { resolveSanityImageUrl } from './sanity/image';
 
+export const REVALIDATE_SECONDS = 60;
+
 const mapSanityPostToPost = (post: SanityPost): Post => ({
   id: post._id,
   slug: post.slug?.current || '',
@@ -33,7 +35,9 @@ export const getAllPosts = async (): Promise<Post[]> => {
   }
 
   try {
-    const posts = await sanityClient.fetch<SanityPost[]>(allPostsQuery);
+    const posts = await sanityClient.fetch<SanityPost[]>(allPostsQuery, {}, {
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
     return posts.map(mapSanityPostToPost).filter((post) => Boolean(post.slug));
   } catch (error) {
     console.error('Failed to fetch posts from Sanity:', error);
@@ -49,9 +53,13 @@ export const fetchPostBySlug = async (
   }
 
   try {
-    const post = await sanityClient.fetch<SanityPost | null>(postBySlugQuery, {
-      slug,
-    });
+    const post = await sanityClient.fetch<SanityPost | null>(
+      postBySlugQuery,
+      { slug },
+      {
+        next: { revalidate: REVALIDATE_SECONDS },
+      }
+    );
     return post ? mapSanityPostToPost(post) : null;
   } catch (error) {
     console.error(`Failed to fetch post "${slug}" from Sanity:`, error);
@@ -65,7 +73,13 @@ export const getAllPostSlugs = async (): Promise<string[]> => {
   }
 
   try {
-    const slugs = await sanityClient.fetch<Array<{ slug: string }>>(postSlugsQuery);
+    const slugs = await sanityClient.fetch<Array<{ slug: string }>>(
+      postSlugsQuery,
+      {},
+      {
+        next: { revalidate: REVALIDATE_SECONDS },
+      }
+    );
     return slugs.map((entry) => entry.slug).filter(Boolean);
   } catch (error) {
     console.error('Failed to fetch post slugs from Sanity:', error);
