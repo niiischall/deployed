@@ -16,3 +16,48 @@
 .markdown h3 {
   @apply text-2xl mt-8 mb-4 leading-snug;
 }
+
+.markdown h4 {
+  @apply text-xl mt-8 mb-3 leading-snug font-semibold;
+}
+
+.markdown h5 {
+  @apply text-lg mt-6 mb-3 leading-snug font-semibold;
+}
+
+.markdown h6 {
+  @apply text-base mt-6 mb-2 leading-snug font-semibold uppercase tracking-wide;
+}
+
+.markdown a {
+  @apply underline decoration-2 underline-offset-2 text-sky-700 transition-colors;
+}
+
+.markdown a:hover {
+  @apply text-sky-600;
+}
+
+.markdown :not(pre) > code {
+  @apply px-1.5 py-0.5 rounded bg-slate-100 text-[0.95em] text-slate-800;
+}
+
+.markdown table {
+  @apply w-full my-6 border-collapse text-base;
+}
+
+.markdown th,
+.markdown td {
+  @apply border border-slate-300 px-3 py-2 align-top;
+}
+
+.markdown th {
+  @apply bg-slate-100 font-semibold text-left;
+}
+
+.markdown img {
+  @apply my-8 rounded-lg w-full h-auto;
+}
+
+.markdown hr {
+  @apply my-10 border-slate-300;
+}
