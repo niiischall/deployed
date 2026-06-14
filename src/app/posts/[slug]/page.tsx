@@ -4,10 +4,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { fetchPostBySlug, getAllPostSlugs, getAllPosts } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
+import { getLifetimePostViews } from '@/lib/posthog';
 import Container from '@/app/_components/container';
 import Header from '@/app/_components/header';
+import DateFormatter from '@/app/_components/date-formatter';
 import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
+import { ReadingProgress } from '@/app/_components/reading-progress';
 import { calculateReadingTime } from '@/lib/utils';
 
 export const revalidate = 60;
@@ -71,11 +74,12 @@ export default async function Post(props: Params) {
   const content = await markdownToHtml(post.content.markdown || '');
   const { contentWithHeadingIds, tocItems } = addHeadingIdsAndExtractToc(content);
   const readingTime = calculateReadingTime(content);
+  const postUrl = `https://blog.nischalnikit.xyz/posts/${post.slug}`;
+  const lifetimeViews = await getLifetimePostViews(postUrl);
   const allPosts = await getAllPosts();
   const currentPostIndex = allPosts.findIndex((entry) => entry.slug === post.slug);
   const previousPost = currentPostIndex >= 0 ? allPosts[currentPostIndex + 1] : null;
   const nextPost = currentPostIndex > 0 ? allPosts[currentPostIndex - 1] : null;
-  const postUrl = `https://blog.nischalnikit.xyz/posts/${post.slug}`;
   const description =
     post.excerpt || post.subtitle || `Read ${post.title} on deployed by nischal.`;
   const imageUrl = post.coverImage.url || 'https://blog.nischalnikit.xyz/opengraph-image.png';
@@ -104,6 +108,7 @@ export default async function Post(props: Params) {
 
   return (
     <main>
+      <ReadingProgress contentSelector='#post-content' />
       <Container>
         <script
           type='application/ld+json'
@@ -115,24 +120,47 @@ export default async function Post(props: Params) {
             title={post.title}
             coverImage={post.coverImage.url}
             date={post.publishedAt}
+            showDate={false}
           />
           <div className='max-w-2xl mx-auto'>
             <div className='mb-3 text-lg'>
-              <p className='inline-flex items-center gap-2'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='1.8'
-                  className='h-5 w-5'
-                  aria-hidden='true'
-                >
-                  <circle cx='12' cy='12' r='8.5' />
-                  <path d='M12 7.5v5l3.5 2' />
-                </svg>
-                <span>{readingTime}</span>
-              </p>
+              <div className='flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4'>
+                <p className='inline-flex items-center gap-2'>
+                  <DateFormatter dateString={post.publishedAt} />
+                </p>
+                <p className='inline-flex items-center gap-2'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='1.8'
+                    className='h-5 w-5'
+                    aria-hidden='true'
+                  >
+                    <circle cx='12' cy='12' r='8.5' />
+                    <path d='M12 7.5v5l3.5 2' />
+                  </svg>
+                  <span>{readingTime}</span>
+                </p>
+                {lifetimeViews !== null ? (
+                  <p className='inline-flex items-center gap-2'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      stroke='currentColor'
+                      strokeWidth='1.8'
+                      className='h-5 w-5'
+                      aria-hidden='true'
+                    >
+                      <path d='M1.5 12s3.8-7 10.5-7 10.5 7 10.5 7-3.8 7-10.5 7S1.5 12 1.5 12Z' />
+                      <circle cx='12' cy='12' r='3.25' />
+                    </svg>
+                    <span>{lifetimeViews.toLocaleString()} views</span>
+                  </p>
+                ) : null}
+              </div>
             </div>
             {post.tags?.length ? (
               <div className='mb-6 flex flex-wrap gap-2'>

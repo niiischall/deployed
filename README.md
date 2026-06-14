@@ -94,5 +94,10 @@ Set these environment variables in Vercel:
 - `NEXT_PUBLIC_SANITY_DATASET`
 - `NEXT_PUBLIC_SANITY_API_VERSION`
 - `SANITY_API_READ_TOKEN` (only if dataset is private)
+- `NEXT_PUBLIC_POSTHOG_KEY`
+- `NEXT_PUBLIC_POSTHOG_HOST` (for client-side tracking)
+- `POSTHOG_PROJECT_ID` (for server-side lifetime post views)
+- `POSTHOG_PERSONAL_API_KEY` (for server-side PostHog query API access)
+- `POSTHOG_HOST` (optional, defaults to `NEXT_PUBLIC_POSTHOG_HOST` when omitted)
 
 Then redeploy. Pushing to `main` triggers a production build.

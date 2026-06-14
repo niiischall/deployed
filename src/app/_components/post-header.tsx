@@ -6,20 +6,23 @@ type Props = {
   title: string;
   coverImage?: string;
   date: string;
+  showDate?: boolean;
 };
 
-export function PostHeader({ title, coverImage, date }: Props) {
+export function PostHeader({ title, coverImage, date, showDate = true }: Props) {
   return (
     <>
       <PostTitle>{title}</PostTitle>
       <div className='max-w-2xl mx-auto mb-8 md:mb-16'>
         <CoverImage title={title} src={coverImage} />
       </div>
-      <div className='max-w-2xl mx-auto'>
-        <div className='mb-2 text-lg'>
-          <DateFormatter dateString={date} />
+      {showDate ? (
+        <div className='max-w-2xl mx-auto'>
+          <div className='mb-2 text-lg'>
+            <DateFormatter dateString={date} />
+          </div>
         </div>
-      </div>
+      ) : null}
     </>
   );
 }
