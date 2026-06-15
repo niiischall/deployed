@@ -109,7 +109,10 @@ export default async function Post(props: Params) {
 
   return (
     <main>
-      <ReadingProgress contentSelector='#post-content' />
+      <ReadingProgress
+        contentSelector='#post-content'
+        tracking={{ postSlug: post.slug, postTitle: post.title }}
+      />
       <Container>
         <script
           type='application/ld+json'

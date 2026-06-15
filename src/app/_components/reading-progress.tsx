@@ -1,15 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import posthog from 'posthog-js';
 
 type ReadingProgressProps = {
   contentSelector: string;
+  tracking?: {
+    postSlug: string;
+    postTitle: string;
+  };
 };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const SCROLL_MILESTONES = [25, 50, 75, 100] as const;
 
-export function ReadingProgress({ contentSelector }: ReadingProgressProps) {
+export function ReadingProgress({ contentSelector, tracking }: ReadingProgressProps) {
   const [progress, setProgress] = useState(0);
+  const firedMilestonesRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
     const content = document.querySelector<HTMLElement>(contentSelector);
@@ -21,10 +28,25 @@ export function ReadingProgress({ contentSelector }: ReadingProgressProps) {
     const updateProgress = () => {
       const rect = content.getBoundingClientRect();
       const viewportHeight = window.innerHeight || 1;
-      const markerPosition = viewportHeight * 0.3;
-      const distanceIntoContent = markerPosition - rect.top;
+      const viewportBottom = window.scrollY + viewportHeight;
+      const contentTop = window.scrollY + rect.top;
       const totalScrollableContent = Math.max(content.scrollHeight, 1);
-      const ratio = clamp(distanceIntoContent / totalScrollableContent, 0, 1);
+      const ratio = clamp((viewportBottom - contentTop) / totalScrollableContent, 0, 1);
+      const depthPercent = Math.round(ratio * 100);
+
+      if (tracking) {
+        for (const milestone of SCROLL_MILESTONES) {
+          if (depthPercent >= milestone && !firedMilestonesRef.current.has(milestone)) {
+            firedMilestonesRef.current.add(milestone);
+            posthog.capture('Post Scroll Depth Reached', {
+              post_slug: tracking.postSlug,
+              post_title: tracking.postTitle,
+              scroll_depth_percent: milestone,
+            });
+          }
+        }
+      }
+
       setProgress(Math.round(ratio * 100));
     };
     updateProgress();
@@ -36,7 +58,7 @@ export function ReadingProgress({ contentSelector }: ReadingProgressProps) {
       window.removeEventListener('scroll', updateProgress);
       window.removeEventListener('resize', updateProgress);
     };
-  }, [contentSelector]);
+  }, [contentSelector, tracking]);
 
   return (
     <div
