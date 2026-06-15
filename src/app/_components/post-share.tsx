@@ -1,20 +1,33 @@
 'use client';
 
 import Image from 'next/image';
-import { CopySimple, LinkedinLogo, WhatsappLogo, XLogo } from '@phosphor-icons/react';
+import { CopySimple, LinkedinLogo, ShareNetwork, WhatsappLogo, XLogo } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
+import posthog from 'posthog-js';
 
 type PostShareProps = {
   title: string;
   postUrl: string;
+  postSlug: string;
   coverImage?: string;
 };
 
 const iconButtonClass =
   'inline-flex h-11 w-11 items-center justify-center rounded-md border border-slate-300/90 bg-white/70 text-slate-700 transition-colors hover:border-sky-300 hover:text-sky-700 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-sky-400 dark:hover:text-sky-300';
 
-export function PostShare({ title, postUrl, coverImage }: PostShareProps) {
+export function PostShare({ title, postUrl, postSlug, coverImage }: PostShareProps) {
   const [copied, setCopied] = useState(false);
+  const isNativeShareSupported =
+    typeof window !== 'undefined' && typeof navigator.share === 'function';
+
+  const trackShare = (method: string) => {
+    posthog.capture('Post Shared', {
+      post_slug: postSlug,
+      post_title: title,
+      post_url: postUrl,
+      share_method: method,
+    });
+  };
 
   const shareLinks = useMemo(() => {
     const encodedUrl = encodeURIComponent(postUrl);
@@ -30,10 +43,31 @@ export function PostShare({ title, postUrl, coverImage }: PostShareProps) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(postUrl);
+      trackShare('clipboard');
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1800);
     } catch (error) {
       console.error('Failed to copy link:', error);
+    }
+  };
+
+  const handleNativeShare = async () => {
+    if (!isNativeShareSupported) {
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title,
+        url: postUrl,
+      });
+      trackShare('native');
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+
+      console.error('Failed native share:', error);
     }
   };
 
@@ -59,6 +93,16 @@ export function PostShare({ title, postUrl, coverImage }: PostShareProps) {
             Share it with someone who&apos;ll find it useful.
           </p>
           <div className='mt-4 flex flex-wrap items-center gap-2'>
+            {isNativeShareSupported ? (
+              <button
+                type='button'
+                onClick={handleNativeShare}
+                aria-label='Share natively'
+                className={iconButtonClass}
+              >
+                <ShareNetwork className='h-6 w-6' aria-hidden='true' weight='regular' />
+              </button>
+            ) : null}
             <button
               type='button'
               onClick={handleCopy}
@@ -74,6 +118,7 @@ export function PostShare({ title, postUrl, coverImage }: PostShareProps) {
               rel='noopener noreferrer'
               aria-label='Share on Twitter'
               className={iconButtonClass}
+              onClick={() => trackShare('twitter')}
             >
               <XLogo className='h-6 w-6' aria-hidden='true' weight='regular' />
             </a>
@@ -84,6 +129,7 @@ export function PostShare({ title, postUrl, coverImage }: PostShareProps) {
               rel='noopener noreferrer'
               aria-label='Share on LinkedIn'
               className={iconButtonClass}
+              onClick={() => trackShare('linkedin')}
             >
               <LinkedinLogo className='h-6 w-6' aria-hidden='true' weight='regular' />
             </a>
@@ -94,6 +140,7 @@ export function PostShare({ title, postUrl, coverImage }: PostShareProps) {
               rel='noopener noreferrer'
               aria-label='Share on WhatsApp'
               className={iconButtonClass}
+              onClick={() => trackShare('whatsapp')}
             >
               <WhatsappLogo className='h-6 w-6' aria-hidden='true' weight='regular' />
             </a>
