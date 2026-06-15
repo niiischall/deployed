@@ -12,6 +12,7 @@ import { PostBody } from '@/app/_components/post-body';
 import { PostHeader } from '@/app/_components/post-header';
 import { ReadingProgress } from '@/app/_components/reading-progress';
 import { PostShare } from '@/app/_components/post-share';
+import { PostToc } from '@/app/_components/post-toc';
 import { calculateReadingTime } from '@/lib/utils';
 
 export const revalidate = 60;
@@ -186,20 +187,7 @@ export default async function Post(props: Params) {
                   On this page
                 </p>
                 <nav aria-label='Table of contents'>
-                  <ul className='space-y-2 text-[1.3125rem] leading-7'>
-                    {tocItems.map((item) => (
-                      <li key={item.id}>
-                        <a
-                          href={`#${item.id}`}
-                          className={`block text-slate-700 transition-colors hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400 ${
-                            item.level === 3 ? 'pl-3' : item.level === 4 ? 'pl-6' : ''
-                          }`}
-                        >
-                          {item.text}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                  <PostToc items={tocItems} postSlug={post.slug} postTitle={post.title} />
                 </nav>
               </div>
             </div>
