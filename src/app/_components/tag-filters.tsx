@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 
 type Props = {
   tags: string[];
@@ -55,6 +56,13 @@ export const TagFilters = ({ tags, activeTag }: Props) => {
   };
 
   const handleFilterSelect = (tag: string | null) => {
+    posthog.capture('Tag Filter Clicked', {
+      selected_tag: tag ?? 'all',
+      previous_tag: activeTag ?? 'all',
+      selected_all_tags: tag === null,
+      was_already_active: activeTag === tag,
+    });
+
     router.push(buildTagHref(tag), { scroll: false });
     scrollToEarlierDeployments();
   };
