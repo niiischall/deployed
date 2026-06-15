@@ -17,6 +17,7 @@ const SCROLL_MILESTONES = [25, 50, 75, 100] as const;
 export function ReadingProgress({ contentSelector, tracking }: ReadingProgressProps) {
   const [progress, setProgress] = useState(0);
   const firedMilestonesRef = useRef<Set<number>>(new Set());
+  const hasCapturedCompletionRef = useRef(false);
 
   useEffect(() => {
     const content = document.querySelector<HTMLElement>(contentSelector);
@@ -44,6 +45,14 @@ export function ReadingProgress({ contentSelector, tracking }: ReadingProgressPr
               scroll_depth_percent: milestone,
             });
           }
+        }
+
+        if (depthPercent >= 100 && !hasCapturedCompletionRef.current) {
+          hasCapturedCompletionRef.current = true;
+          posthog.capture('Post Reading Completed', {
+            post_slug: tracking.postSlug,
+            post_title: tracking.postTitle,
+          });
         }
       }
 
