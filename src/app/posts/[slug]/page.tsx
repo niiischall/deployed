@@ -280,21 +280,21 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     return notFound();
   }
 
-  const title = `${post.title} | deployed by nischal`;
+  const brandedTitle = `${post.title} | deployed by nischal`;
   const description =
     post.excerpt || post.subtitle || `Read ${post.title} on deployed by nischal.`;
   const canonicalUrl = `https://blog.nischalnikit.xyz/posts/${post.slug}`;
   const imageUrl = post.coverImage.url || 'https://blog.nischalnikit.xyz/opengraph-image.png';
 
   return {
-    title,
+    title: post.title,
     description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
       type: 'article',
-      title,
+      title: brandedTitle,
       description,
       url: canonicalUrl,
       siteName: 'deployed by nischal',
@@ -308,7 +308,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: brandedTitle,
       description,
       images: [imageUrl],
     },

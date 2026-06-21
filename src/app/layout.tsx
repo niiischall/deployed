@@ -17,8 +17,27 @@ const ovo = Ovo({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://blog.nischalnikit.xyz'),
-  title: `deployed by nischal`,
+  title: {
+    default: 'deployed by nischal',
+    template: '%s | deployed by nischal',
+  },
   description: `A collection of writeups by nischal nikit`,
+  manifest: '/favicon/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon/favicon.ico', sizes: 'any' },
+      { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      {
+        url: '/favicon/apple-touch-icon.png',
+        sizes: '180x180',
+        type: 'image/png',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -32,82 +51,7 @@ export default function RootLayout({
       className={`${ovo.variable} scroll-smooth motion-reduce:scroll-auto`}
     >
       <head>
-        <link
-          rel='apple-touch-icon'
-          sizes='57x57'
-          href='/favicon/apple-icon-57x57.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='60x60'
-          href='/favicon/apple-icon-60x60.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='72x72'
-          href='/favicon/apple-icon-72x72.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='76x76'
-          href='/favicon/apple-icon-76x76.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='114x114'
-          href='/favicon/apple-icon-114x114.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='120x120'
-          href='/favicon/apple-icon-120x120.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='144x144'
-          href='/favicon/apple-icon-144x144.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='152x152'
-          href='/favicon/apple-icon-152x152.png'
-        />
-        <link
-          rel='apple-touch-icon'
-          sizes='180x180'
-          href='/favicon/apple-icon-180x180.png'
-        />
-        <link
-          rel='icon'
-          type='image/png'
-          sizes='192x192'
-          href='/favicon/android-icon-192x192.png'
-        />
-        <link
-          rel='icon'
-          type='image/png'
-          sizes='32x32'
-          href='/favicon/favicon-32x32.png'
-        />
-        <link
-          rel='icon'
-          type='image/png'
-          sizes='96x96'
-          href='/favicon/favicon-96x96.png'
-        />
-        <link
-          rel='icon'
-          type='image/png'
-          sizes='16x16'
-          href='/favicon/favicon-16x16.png'
-        />
-        <link rel='manifest' href='/favicon/manifest.json' />
-        <meta name='msapplication-TileColor' content='#ffffff'></meta>
-        <meta
-          name='msapplication-TileImage'
-          content='/favicon/ms-icon-144x144.png'
-        ></meta>
-        <meta name='theme-color' content='#ffffff'></meta>
+        <meta name='theme-color' content='#EEEAE3'></meta>
         <meta property='og:image' content='<generated>' />
         <meta property='og:image:alt' content='deployed by nischal' />
         <meta property='og:image:type' content='image/png' />
