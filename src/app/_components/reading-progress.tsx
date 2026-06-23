@@ -24,6 +24,7 @@ const METER_INNER_BORDER_RADIUS = METER_RADIUS - METER_STROKE / 2;
 type MeterTheme = {
   ring: string;
   label: string;
+  bar: string;
 };
 
 const METER_THEMES: ReadonlyArray<{ min: number; theme: MeterTheme }> = [
@@ -32,6 +33,7 @@ const METER_THEMES: ReadonlyArray<{ min: number; theme: MeterTheme }> = [
     theme: {
       ring: 'text-emerald-500 dark:text-emerald-400',
       label: 'text-emerald-600 dark:text-emerald-300',
+      bar: 'bg-emerald-500 dark:bg-emerald-400',
     },
   },
   {
@@ -39,6 +41,7 @@ const METER_THEMES: ReadonlyArray<{ min: number; theme: MeterTheme }> = [
     theme: {
       ring: 'text-amber-500 dark:text-amber-400',
       label: 'text-amber-600 dark:text-amber-300',
+      bar: 'bg-amber-500 dark:bg-amber-400',
     },
   },
   {
@@ -46,6 +49,7 @@ const METER_THEMES: ReadonlyArray<{ min: number; theme: MeterTheme }> = [
     theme: {
       ring: 'text-violet-500 dark:text-violet-400',
       label: 'text-violet-600 dark:text-violet-300',
+      bar: 'bg-violet-500 dark:bg-violet-400',
     },
   },
   {
@@ -53,6 +57,7 @@ const METER_THEMES: ReadonlyArray<{ min: number; theme: MeterTheme }> = [
     theme: {
       ring: 'text-sky-500 dark:text-sky-400',
       label: 'text-sky-600 dark:text-sky-300',
+      bar: 'bg-sky-500 dark:bg-sky-400',
     },
   },
   {
@@ -60,6 +65,7 @@ const METER_THEMES: ReadonlyArray<{ min: number; theme: MeterTheme }> = [
     theme: {
       ring: 'text-slate-400 dark:text-slate-500',
       label: 'text-slate-600 dark:text-slate-300',
+      bar: 'bg-slate-400 dark:bg-slate-500',
     },
   },
 ];
@@ -139,7 +145,18 @@ export function ReadingProgress({
   const dashOffset = METER_CIRCUMFERENCE * (1 - progress / 100);
 
   return (
-    <div className='pointer-events-none fixed inset-x-0 top-32 z-50 hidden px-5 lg:block'>
+    <>
+      <div
+        aria-hidden='true'
+        className='pointer-events-none fixed left-0 top-0 z-50 h-1 w-full bg-slate-200/60 md:hidden dark:bg-slate-800/70'
+      >
+        <div
+          className={`h-full transition-[width] duration-100 transition-colors duration-300 ${meterTheme.bar}`}
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <div className='pointer-events-none fixed inset-x-0 top-32 z-50 hidden px-5 md:block'>
       <div className='mx-auto flex max-w-5xl justify-end'>
         <div
           role='progressbar'
@@ -196,6 +213,7 @@ export function ReadingProgress({
           </span>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
